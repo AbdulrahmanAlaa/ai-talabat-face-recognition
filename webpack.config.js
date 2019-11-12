@@ -28,7 +28,10 @@ module.exports = {
     ]
   },
   plugins: [
-    new CopyPlugin([{ from: 'src/models', to: 'models' }]),
+    new CopyPlugin([
+      { from: 'src/models', to: 'models' },
+      { from: 'src/assets/users', to: 'users' }
+  ]),
     new HtmlWebpackPlugin({
       template: "src/index.html",
       title: `Face Recognition | Talabat`,
