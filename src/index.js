@@ -1,8 +1,11 @@
 // const MODEL_URL = '/models';
 import "./assets/css/style.css";
 import * as faceapi from "face-api.js";
+import { speak } from "./text-to-speach";
+
 const video = document.getElementById("videoHolder");
 
+let isSpeaking = false;
 const {
   tinyFaceDetector,
   faceLandmark68Net,
@@ -41,17 +44,29 @@ video.addEventListener("play", async e => {
     const detections = await faceapi
       .detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
       .withFaceLandmarks()
-      .withFaceExpressions().withFaceDescriptors();
+      .withFaceExpressions()
+      .withFaceDescriptors();
     let resizedDetections = faceapi.resizeResults(detections, displaysize);
     canvas.getContext("2d").clearRect(0, 0, video.width, video.height);
 
-    const results =  resizedDetections.map(x => {
+    const results = resizedDetections.map(x => {
       return faceMacher.findBestMatch(x.descriptor);
     });
-    results.map((r,i)=>{
-        const box = resizedDetections[i].detection.box;
-        const drawBox = new faceapi.draw.DrawBox(box, { label: r.toString() });
-        drawBox.draw(canvas);
+    const alreadySaidHi = [];
+    results.map((r, i) => {
+      console.log(r.distance);
+      if (!(Math.floor(r.distance * 100) > 40)) {
+        return;
+      }
+      if (!isSpeaking && r.label.indexOf("unknown") === -1) {
+        isSpeaking = true;
+        alreadySaidHi.push()
+        speak(`Hello ${r.label}`, () => (isSpeaking = !isSpeaking));
+        console.log(r);
+      }
+      const box = resizedDetections[i].detection.box;
+      const drawBox = new faceapi.draw.DrawBox(box, { label: r.toString() });
+      drawBox.draw(canvas);
     });
     // resizedDetections = resizedDetections.map(d => {
     //   const box = d.detection.box;
@@ -66,9 +81,14 @@ video.addEventListener("play", async e => {
   }, 100);
 });
 
-
 const loadAllLabelUsers = () => {
-  const users = ["sinthujan.png","abdulrahman.png","noaman.png", "jamil.png", "michael.png"];
+  const users = [
+    "sinthujan.png",
+    "abdulrahman.png",
+    "noaman.png",
+    "jamil.png",
+    "michael.png"
+  ];
   return Promise.all(
     users.map(async u => {
       const img = await faceapi.fetchImage(`/users/${u}`);
