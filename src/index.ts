@@ -1,9 +1,9 @@
 // const MODEL_URL = '/models';
-import "./assets/css/style.css";
-import * as faceapi from "face-api.js";
-import { speak } from "./text-to-speach";
+import './assets/css/style.css';
+import * as faceapi from 'face-api.js';
+import { speak } from './text-to-speach';
 
-const video = document.getElementById("videoHolder");
+const video = document.getElementById('videoHolder') as HTMLVideoElement;
 
 let isSpeaking = false;
 const {
@@ -15,11 +15,11 @@ const {
 } = faceapi.nets;
 
 Promise.all([
-  tinyFaceDetector.loadFromUri("/models"),
-  faceLandmark68Net.loadFromUri("/models"),
-  faceExpressionNet.loadFromUri("/models"),
-  faceRecognitionNet.loadFromUri("/models"),
-  ssdMobilenetv1.loadFromUri("/models")
+  tinyFaceDetector.loadFromUri('/models'),
+  faceLandmark68Net.loadFromUri('/models'),
+  faceExpressionNet.loadFromUri('/models'),
+  faceRecognitionNet.loadFromUri('/models'),
+  ssdMobilenetv1.loadFromUri('/models')
 ]).then(startVideo);
 
 function startVideo() {
@@ -32,7 +32,7 @@ function startVideo() {
   );
 }
 
-video.addEventListener("play", async e => {
+video.addEventListener('play', async e => {
   const displaysize = { width: video.width, height: video.height };
   const canvas = faceapi.createCanvasFromMedia(video, displaysize);
 
@@ -46,23 +46,27 @@ video.addEventListener("play", async e => {
       .withFaceLandmarks()
       .withFaceExpressions()
       .withFaceDescriptors();
+
     let resizedDetections = faceapi.resizeResults(detections, displaysize);
-    canvas.getContext("2d").clearRect(0, 0, video.width, video.height);
+    canvas.getContext('2d').clearRect(0, 0, video.width, video.height);
 
     const results = resizedDetections.map(x => {
       return faceMacher.findBestMatch(x.descriptor);
     });
     const alreadySaidHi = [];
     results.map((r, i) => {
-      console.log(r.distance);
       if (!(Math.floor(r.distance * 100) > 40)) {
         return;
       }
-      if (!isSpeaking && r.label.indexOf("unknown") === -1) {
-        isSpeaking = true;
-        alreadySaidHi.push()
-        speak(`Hello ${r.label}`, () => (isSpeaking = !isSpeaking));
-        console.log(r);
+      const userExpression = detections[0]?.expressions?.asSortedArray()[0]
+        ?.expression;
+
+      if (userExpression && !isSpeaking && r.label.indexOf('unknown') === -1) {
+        console.log(userExpression);
+        // isSpeaking = true;
+        alreadySaidHi.push();
+        // /speak(`Hello ${r.label}`, () => (isSpeaking = !isSpeaking));
+        // console.log(r);
       }
       const box = resizedDetections[i].detection.box;
       const drawBox = new faceapi.draw.DrawBox(box, { label: r.toString() });
@@ -83,11 +87,11 @@ video.addEventListener("play", async e => {
 
 const loadAllLabelUsers = () => {
   const users = [
-    "sinthujan.png",
-    "abdulrahman.png",
-    "noaman.png",
-    "jamil.png",
-    "michael.png"
+    'sinthujan.png',
+    //'abdulrahman.png',
+    'noaman.png',
+    'jamil.png',
+    'michael.png'
   ];
   return Promise.all(
     users.map(async u => {
@@ -97,9 +101,13 @@ const loadAllLabelUsers = () => {
         .withFaceLandmarks()
         .withFaceExpressions()
         .withFaceDescriptor();
-      return new faceapi.LabeledFaceDescriptors(u.replace(".png", ""), [
+      return new faceapi.LabeledFaceDescriptors(u.replace('.png', ''), [
         d.descriptor
       ]);
     })
   );
+};
+
+const askToSmile = () => {
+
 };
