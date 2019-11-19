@@ -3,7 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
-  entry: './src/index.ts',
+  entry: ['./client/src/index.ts'],
   output: {
     filename: 'index.js',
     path: path.resolve(__dirname, 'dist')
@@ -11,7 +11,8 @@ module.exports = {
   devServer: {
     contentBase: path.join(__dirname, 'dist'),
     compress: true,
-    port: 9000
+    port: 9000,
+    hot: true
   },
   node: {
     fs: 'empty'
@@ -21,7 +22,7 @@ module.exports = {
       {
         test: /\.tsx?$/,
         use: 'ts-loader',
-        exclude: /node_modules/,
+        exclude: /node_modules/
       },
       {
         test: /\.(js)$/,
@@ -35,15 +36,15 @@ module.exports = {
     ]
   },
   resolve: {
-    extensions: [ '.tsx', '.ts', '.js' ],
+    extensions: ['.tsx', '.ts', '.js']
   },
   plugins: [
     new CopyPlugin([
-      { from: 'src/models', to: 'models' },
-      { from: 'src/assets/users', to: 'users' }
+      { from: 'client/src/models', to: 'models' },
+      { from: 'client/src/assets/users', to: 'users' }
     ]),
     new HtmlWebpackPlugin({
-      template: 'src/index.html',
+      template: 'client/src/index.html',
       title: `Face Recognition | Talabat`,
       hash: true,
       filename: 'index.html' //relative to root of the application
