@@ -63,9 +63,9 @@ video.addEventListener('play', async e => {
 
       if (userExpression && !isSpeaking && r.label.indexOf('unknown') === -1) {
         console.log(userExpression);
-        // isSpeaking = true;
+        isSpeaking = true;
         alreadySaidHi.push();
-        // /speak(`Hello ${r.label}`, () => (isSpeaking = !isSpeaking));
+        speak(`Hello ${r.label}`, () => (isSpeaking = !isSpeaking));
         // console.log(r);
       }
       const box = resizedDetections[i].detection.box;
