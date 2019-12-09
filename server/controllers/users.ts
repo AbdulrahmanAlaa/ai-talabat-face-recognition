@@ -1,14 +1,16 @@
-import { Schema } from 'mongoose';
+import { Request, Response } from 'express';
+import { seed, getAll } from '../models/users';
 
-const usersModel = new Schema({
-  name: {
-    type: String,
-    required: true
-  },
-  image: {
-    type: String,
-    required: true
+export const getAllUsers = async (req: Request, res: Response) => {
+  return res.send(await getAll());
+};
+
+export const seedUsers = async () => {
+  const users = await getAll();
+  if (users.length) {
+    console.log('users table already populated.');
+  } else {
+    console.log('Populating users table...');
+    seed();
   }
-});
-
-export default usersModel;
+};

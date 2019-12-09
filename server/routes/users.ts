@@ -1,9 +1,7 @@
 import { Router, Request, Response } from 'express';
-
+import {  getAllUsers } from '../controllers/users';
 const usersRoute = Router();
 
-usersRoute.get('', (req: Request, res: Response) => {
-  return res.send('Heeeeeeeeeeeeehehehehehe');
-});
+usersRoute.get('', getAllUsers);
 
 export default usersRoute;

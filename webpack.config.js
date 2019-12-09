@@ -1,9 +1,9 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
-
+const webpack = require('webpack');
 module.exports = {
-  entry: ['./client/src/index.ts'],
+  entry: ['./client/src/app.tsx'],
   output: {
     filename: 'index.js',
     path: path.resolve(__dirname, 'dist')
@@ -20,12 +20,12 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.tsx?$/,
+        test: /\.ts|.tsx?$/,
         use: 'ts-loader',
         exclude: /node_modules/
       },
       {
-        test: /\.(js)$/,
+        test: /\.(js|jsx)$/,
         exclude: /node_modules/,
         use: ['babel-loader']
       },
@@ -35,13 +35,15 @@ module.exports = {
       }
     ]
   },
+  devtool: 'source-map',
   resolve: {
     extensions: ['.tsx', '.ts', '.js']
   },
   plugins: [
+    new webpack.HotModuleReplacementPlugin(),
     new CopyPlugin([
-      { from: 'client/src/models', to: 'models' },
-      { from: 'client/src/assets/users', to: 'users' }
+      { from: 'client/src/models', to: 'models' }
+      // { from: 'client/src/assets/users', to: 'users' }
     ]),
     new HtmlWebpackPlugin({
       template: 'client/src/index.html',
