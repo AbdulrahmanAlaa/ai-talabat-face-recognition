@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "server"
+		},
+		{
+			"path": "client"
+		}
+	],
+	"settings": {
+		"typescript.tsdk": "ai-talabat-face-recognition/node_modules/typescript/lib"
+	}
+}

@@ -6,10 +6,20 @@ ReactDOM.render(
   <>
     <Header />
     <div className="main">
-     {/* <button id="takeImage">Take Photo</button>
-      <img id="img" />  */}
       <Video/>
     </div>
   </>,
   document.getElementById('app')
 );
+
+
+
+// Todo:- 
+// Loading for resources
+// Adding new image to the running app
+// Adding new face/user ability 
+// Adding images to existing face
+// Validating and greeting once in the hour with facial expression smart way 
+// Integrate with fingerprint 
+
+
